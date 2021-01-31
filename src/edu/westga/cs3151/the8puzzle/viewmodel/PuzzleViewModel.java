@@ -1,6 +1,8 @@
 package edu.westga.cs3151.the8puzzle.viewmodel;
 
+import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 import edu.westga.cs3151.the8puzzle.model.Board;
 import edu.westga.cs3151.the8puzzle.model.Move;
@@ -25,6 +27,8 @@ public class PuzzleViewModel {
 	private final BooleanProperty solvedBoardProperty;
 
 	private Board board;
+	private Stack<Move> moves;
+	private Queue<Move> movesToSolution;
 
 	/**
 	 * Instantiates a new student info view model.
@@ -34,6 +38,8 @@ public class PuzzleViewModel {
 	 */
 	public PuzzleViewModel() {
 		this.board = new Board();
+		this.moves = new Stack<Move>();
+		this.movesToSolution = new LinkedList<Move>();
 		this.board.shuffle();
 		this.tileNumberProperty = new StringProperty[Position.MAX_ROWS][Position.MAX_COLS];
 		for (Position pos : Position.values()) {
@@ -77,6 +83,8 @@ public class PuzzleViewModel {
 	public void moveTile(Position pos) {
 		Position destinationPos = this.board.getEmptyTilePosition();
 		if (this.board.moveTile(pos, destinationPos)) {
+			Move move = new Move(pos, destinationPos);
+			this.moves.push(move);
 			this.setTilesForView();
 			if (this.board.isSorted()) {
 				this.solvedBoardProperty.set(true);
@@ -91,7 +99,12 @@ public class PuzzleViewModel {
 	 * @post the most recent move of a puzzle board tile is undone
 	 */
 	public void undo() {
-		System.out.println("Replace me by instructions to undo the most recent move");
+		if (this.moves.isEmpty()) {
+			return;
+		}
+		Move prevMove = this.moves.pop();
+		this.board.moveTile(prevMove.getDestination(), prevMove.getSource());
+		this.setTilesForView();
 	}
 
 	/**
@@ -106,7 +119,7 @@ public class PuzzleViewModel {
 	 * @post the next tile that is moved to its correct position
 	 */
 	public void help() {
-		System.out.println("Replace me by instructions to set the next tile at the correct position.");
+		
 	}
 
 	/**

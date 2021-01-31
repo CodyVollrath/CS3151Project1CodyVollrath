@@ -18,8 +18,8 @@ public class Board {
 	 * The entry of 0 represents the empty tile. The other entries (1, 2, 3, ..., 8)
 	 * represent the tile value.
 	 */
-	private int[][] tiles;
-
+	private int[][] tiles;	
+	
 	/**
 	 * Instantiates an 8-puzzle board
 	 * 
@@ -172,6 +172,7 @@ public class Board {
 		if (dest == null) {
 			throw new IllegalArgumentException("destination position cannot be null");
 		}
+		
 		if (this.isAdjacent(src, dest)) {
 			this.setTile(dest, this.getTile(src));
 			this.setTile(src, 0);
@@ -198,6 +199,7 @@ public class Board {
 		return this.moveTile(move.getSource(), move.getDestination());
 	}
 	
+	
 	/**
 	 * Determines if the two positions are adjacent
 	 * @pre none
@@ -214,6 +216,7 @@ public class Board {
 		return (isSameRowOrCol && isRowOrColDistanceOne);
 		
 	}
+	
 	
 	/**
 	 * Counts the number inversions of values greater 0 in the array list
