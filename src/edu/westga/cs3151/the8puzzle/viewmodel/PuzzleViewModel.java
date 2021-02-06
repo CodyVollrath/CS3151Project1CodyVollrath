@@ -28,7 +28,6 @@ public class PuzzleViewModel {
 
 	private Board board;
 	private Stack<Move> moves;
-	private Queue<Move> movesToSolution;
 
 	/**
 	 * Instantiates a new student info view model.
@@ -39,7 +38,6 @@ public class PuzzleViewModel {
 	public PuzzleViewModel() {
 		this.board = new Board();
 		this.moves = new Stack<Move>();
-		this.movesToSolution = new LinkedList<Move>();
 		this.board.shuffle();
 		this.tileNumberProperty = new StringProperty[Position.MAX_ROWS][Position.MAX_COLS];
 		for (Position pos : Position.values()) {
@@ -119,6 +117,7 @@ public class PuzzleViewModel {
 	 * @post the next tile that is moved to its correct position
 	 */
 	public void help() {
+		
 		
 	}
 
