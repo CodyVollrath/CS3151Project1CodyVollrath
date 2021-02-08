@@ -7,13 +7,11 @@ import java.util.Stack;
 public class PuzzleSolver {
 	private Board board;
 	private Queue<Node> vistedNodes;
-	private Queue<Move> minimumNumberOfMoves;
 	private static final int SOLUTION_NUMBER_OF_SORTED_TILES = 8;
 	
 	public PuzzleSolver(Board board) {
 		this.board = board;
 		this.vistedNodes = new LinkedList<Node>();
-		this.minimumNumberOfMoves = new LinkedList<Move>();
 	}
 	
 	public Queue<Move> help(int tile) {
