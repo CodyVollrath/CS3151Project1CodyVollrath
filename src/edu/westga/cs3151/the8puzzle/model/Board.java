@@ -19,7 +19,7 @@ public class Board {
 	 * represent the tile value.
 	 */
 	private int[][] tiles;	
-	
+
 	/**
 	 * Instantiates an 8-puzzle board
 	 * 

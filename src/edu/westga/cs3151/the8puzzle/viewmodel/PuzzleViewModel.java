@@ -7,6 +7,7 @@ import java.util.Stack;
 import edu.westga.cs3151.the8puzzle.model.Board;
 import edu.westga.cs3151.the8puzzle.model.Move;
 import edu.westga.cs3151.the8puzzle.model.Position;
+import edu.westga.cs3151.the8puzzle.model.PuzzleSolver;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
@@ -28,6 +29,7 @@ public class PuzzleViewModel {
 
 	private Board board;
 	private Stack<Move> moves;
+	private PuzzleSolver solver;
 
 	/**
 	 * Instantiates a new student info view model.
@@ -39,6 +41,7 @@ public class PuzzleViewModel {
 		this.board = new Board();
 		this.moves = new Stack<Move>();
 		this.board.shuffle();
+		this.solver = new PuzzleSolver(this.board);
 		this.tileNumberProperty = new StringProperty[Position.MAX_ROWS][Position.MAX_COLS];
 		for (Position pos : Position.values()) {
 			this.tileNumberProperty[pos.getRow()][pos.getCol()] = new SimpleStringProperty();
@@ -117,8 +120,9 @@ public class PuzzleViewModel {
 	 * @post the next tile that is moved to its correct position
 	 */
 	public void help() {
-		
-		
+		this.solver.setBoard(this.board);
+		int tile = this.board.getNumberSortedTiles() + 1;
+		this.traceMoves(this.solver.help(tile));
 	}
 
 	/**
@@ -131,9 +135,9 @@ public class PuzzleViewModel {
 	 * @post all tiles of this board are in the correct position
 	 */
 	public void solve() {
-		System.out.println("Replace me by instructions to solve the puzzle.");
+		this.solver.setBoard(this.board);
+		this.traceMoves(this.solver.solve());
 	}
-
 	/**
 	 * Shuffles the tiles to generate a new 8-puzzle
 	 * 

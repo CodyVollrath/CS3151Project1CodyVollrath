@@ -1,68 +1,78 @@
 package edu.westga.cs3151.the8puzzle.model;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
-/**
- * Solves a puzzle based on the initial state input
- * @author CodyVollrath
- *
- */
 public class PuzzleSolver {
 	private Board board;
-	private String currentState;
-	private Queue<Move> moveTracker;
+	private Queue<Node> vistedNodes;
 	private Queue<Move> minimumNumberOfMoves;
-	private HashSet<String> states;
-	private static final String GOAL_STATE = "123456780";
+	private static final int SOLUTION_NUMBER_OF_SORTED_TILES = 8;
 	
-	/**
-	 * Sets the initial state
-	 * @param board the puzzle board
-	 */
 	public PuzzleSolver(Board board) {
 		this.board = board;
-		this.currentState = this.convertBoardToString();
-		this.moveTracker = new LinkedList<Move>();
+		this.vistedNodes = new LinkedList<Node>();
 		this.minimumNumberOfMoves = new LinkedList<Move>();
-		this.states = new HashSet<String>();
 	}
 	
-	private String search() {
-		this.goToNextGeneration();
+	public Queue<Move> help(int tile) {
+		return this.findSolution(tile);
+	}
+	
+	public Queue<Move> solve() {
+		return this.findSolution(SOLUTION_NUMBER_OF_SORTED_TILES);
+	}
+	
+	public Board getBoard() {
+		return this.board;
+	}
+	
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+	
+	private Queue<Move> findSolution(int tile) {
+		this.vistedNodes = new LinkedList<Node>();
+		Node initial = new Node(this.board, null, null);
+		this.vistedNodes.add(initial);
+		Queue<Move> moves = new LinkedList<Move>();
+		while (!this.vistedNodes.isEmpty()) {
+			Node currentPosition = this.vistedNodes.remove();
+			Position emptyPosition = currentPosition.getBoard().getEmptyTilePosition();
+			for (Position neighborPosition : emptyPosition.getNeighbors()) {
+				Board newBoard = new Board(currentPosition.getBoard());
+				Move move = new Move(neighborPosition, emptyPosition);
+				newBoard.moveTile(move);
+				Node newNode = new Node(newBoard, currentPosition, move);
+				this.addToVisitedNodes(newNode);
+				if (newBoard.getNumberSortedTiles() >= tile) {
+					while (!(newNode.getParent() == null)) {
+						Move solutionMove = newNode.getMove();
+						moves.add(solutionMove);
+						newNode = newNode.getParent();
+					}
+					return this.getMinimumNumberOfMoves(moves);
+				}
+			}
+		}
 		return null;
-		
 	}
-	
-	private void goToNextGeneration() {
-		Position emptyPosition = this.board.getEmptyTilePosition();
-		for (Position currPosition : emptyPosition.getNeighbors()) {
-			Move move = new Move(currPosition, emptyPosition);
-			this.moveTracker.add(move);
+
+	private void addToVisitedNodes(Node newNode) {
+		if (!(this.vistedNodes.contains(newNode))) {
+			this.vistedNodes.add(newNode);
 		}
 	}
 	
-	private void applyMoves() {
-		while (!this.moveTracker.isEmpty()) {
-			Move move = this.moveTracker.remove();
-			this.board.moveTile(move);
-			this.currentState = this.convertBoardToString();
-			if (this.currentState.equals(GOAL_STATE)) {
-				break;
-			}
+	private Queue<Move> getMinimumNumberOfMoves(Queue<Move> movesList) {
+		Stack<Move> reversal = new Stack<Move>();
+		while (!movesList.isEmpty()) {
+			reversal.add(movesList.remove());
 		}
-		
-	}
-	
-	private String convertBoardToString() {
-		String arrangement = "";
-		for (int row = 0; row < 3; row++) {
-			for (int col = 0; col < 3; col++) {
-				Position position = new Position(row, col);
-				arrangement += this.board.getTile(position);
-			}
+		while (!reversal.isEmpty()) {
+			movesList.add(reversal.pop());
 		}
-		return arrangement;
+		return movesList;
 	}
 }
