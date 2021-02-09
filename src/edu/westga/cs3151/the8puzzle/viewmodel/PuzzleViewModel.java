@@ -158,6 +158,7 @@ public class PuzzleViewModel {
 		if (moves != null && moves.size() > 0) {
 			Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.5), evt -> {
 				Move nextMove = moves.remove();
+				this.moves.add(nextMove);
 				this.board.moveTile(nextMove);
 				this.setTilesForView();
 			}));
