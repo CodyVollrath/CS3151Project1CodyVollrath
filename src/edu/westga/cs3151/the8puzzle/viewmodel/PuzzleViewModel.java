@@ -1,6 +1,5 @@
 package edu.westga.cs3151.the8puzzle.viewmodel;
 
-import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
