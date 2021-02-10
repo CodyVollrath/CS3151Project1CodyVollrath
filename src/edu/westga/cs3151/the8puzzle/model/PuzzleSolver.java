@@ -75,15 +75,15 @@ public class PuzzleSolver {
 		Queue<Move> moves = new LinkedList<Move>();
 		while (!this.vistedNodes.isEmpty()) {
 			
-			Node currentPosition = this.vistedNodes.remove();
-			Position emptyPosition = currentPosition.getBoard().getEmptyTilePosition();
+			Node currentNode = this.vistedNodes.remove();
+			Position emptyPosition = currentNode.getBoard().getEmptyTilePosition();
 			
 			for (Position neighborPosition : emptyPosition.getNeighbors()) {
 				
-				Board nextBoard = new Board(currentPosition.getBoard());
+				Board nextBoard = new Board(currentNode.getBoard());
 				Move move = new Move(neighborPosition, emptyPosition);
 				nextBoard.moveTile(move);
-				Node nextNode = new Node(nextBoard, currentPosition, move);
+				Node nextNode = new Node(nextBoard, currentNode, move);
 				this.addToVisitedNodes(nextNode);
 				
 				if (nextBoard.getNumberSortedTiles() >= tile) {
